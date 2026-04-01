@@ -1,15 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowRight,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  UserPlus,
-} from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -94,7 +86,7 @@ export const LoginCard = () => {
         {/* Form */}
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">
+            <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
               Email address
             </label>
             <div className="relative">
@@ -105,7 +97,8 @@ export const LoginCard = () => {
                 {...register("email")}
                 className={cn(
                   "pl-10",
-                  errors.email && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10"
+                  errors.email &&
+                    "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10",
                 )}
               />
             </div>
@@ -118,7 +111,7 @@ export const LoginCard = () => {
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">
+              <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
                 Password
               </label>
               <Link
@@ -135,8 +128,9 @@ export const LoginCard = () => {
                 {...register("password")}
                 placeholder="••••••••"
                 className={cn(
-                  "pl-10 pr-10",
-                  errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10"
+                  "pr-10 pl-10",
+                  errors.password &&
+                    "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10",
                 )}
               />
               <button
@@ -168,7 +162,7 @@ export const LoginCard = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-10 text-sm font-medium"
+            className="h-10 w-full text-sm font-medium"
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -179,7 +173,9 @@ export const LoginCard = () => {
 
           <div className="relative flex items-center py-2">
             <div className="grow border-t border-blue-100 dark:border-blue-800"></div>
-            <span className="mx-4 shrink text-[11px] font-medium text-blue-400 uppercase tracking-widest">or</span>
+            <span className="mx-4 shrink text-[11px] font-medium tracking-widest text-blue-400 uppercase">
+              or
+            </span>
             <div className="grow border-t border-blue-100 dark:border-blue-800"></div>
           </div>
 
@@ -187,7 +183,7 @@ export const LoginCard = () => {
         </form>
 
         <p className="mt-8 text-center text-sm text-blue-500/70">
-          Don't have an account?{" "}
+          {`Don't`} have an account?{" "}
           <Link
             href="/register"
             className="font-medium text-blue-600 hover:underline dark:text-blue-400"

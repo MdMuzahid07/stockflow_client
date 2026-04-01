@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -64,7 +65,7 @@ export default function ActivityLogPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-1">
         <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">
-          Activity 
+          Activity
         </h1>
         <p className="text-sm text-blue-500/70">
           Historical audit trail of all inventory events and system actions.
@@ -132,7 +133,7 @@ export default function ActivityLogPage() {
                       <p className="text-sm font-bold tracking-tight text-blue-900 dark:text-blue-100">
                         {log.action}
                       </p>
-                      <time className="text-[10px] font-bold uppercase tracking-[0.2em] text-blue-400">
+                      <time className="text-[10px] font-bold tracking-[0.2em] text-blue-400 uppercase">
                         {new Date(log.createdAt).toLocaleString([], {
                           month: "short",
                           day: "numeric",
@@ -143,13 +144,13 @@ export default function ActivityLogPage() {
                       </time>
                     </div>
                     <div className="flex items-center gap-4">
-                      <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-blue-500/70 ">
+                      <div className="flex items-center gap-1.5 text-[10px] font-bold tracking-wider text-blue-500/70 uppercase">
                         <User className="h-3 w-3" />
                         {log.user?.name || "System Core"}
                       </div>
                       <Badge
                         variant="secondary"
-                        className="h-5 px-2 text-[9px] font-black uppercase tracking-[0.15em] opacity-80"
+                        className="h-5 px-2 text-[9px] font-black tracking-[0.15em] uppercase opacity-80"
                       >
                         {log.type}
                       </Badge>

@@ -1,16 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
-import {
-  useGetStatsQuery,
-  useGetAnalyticsQuery,
-} from "@/redux/features/dashboard/dashboard.api";
-import {
-  TrendingUp,
-  ShoppingCart,
-  Clock,
-  AlertTriangle,
-  DollarSign,
-  Package,
-} from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
@@ -19,6 +9,12 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import {
   Table,
   TableBody,
   TableCell,
@@ -26,13 +22,19 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+  useGetAnalyticsQuery,
+  useGetStatsQuery,
+} from "@/redux/features/dashboard/dashboard.api";
+import {
+  AlertTriangle,
+  Clock,
+  DollarSign,
+  Package,
+  ShoppingCart,
+  TrendingUp,
+} from "lucide-react";
 import {
   Area,
   AreaChart,
@@ -41,11 +43,14 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { cn } from "@/lib/utils";
 
 export default function OverviewPage() {
-  const { data: statsData, isLoading: isStatsLoading } = useGetStatsQuery(undefined);
-  const { data: analyticsData, isLoading: isAnalyticsLoading } = useGetAnalyticsQuery(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: statsData, isLoading: isStatsLoading } =
+    useGetStatsQuery(undefined);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { data: analyticsData, isLoading: isAnalyticsLoading } =
+    useGetAnalyticsQuery(undefined);
 
   const stats = statsData?.data || {
     revenueToday: 0,
@@ -72,23 +77,27 @@ export default function OverviewPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">System Overview</h1>
+        <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">
+          System Overview
+        </h1>
         <p className="text-sm text-blue-500/70">
-          Welcome back! Here's a brief look at your inventory performance.
+          Welcome back! {`Here's`} a brief look at your inventory performance.
         </p>
       </div>
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-blue-600 text-white dark:bg-blue-600 dark:border-blue-500">
+        <Card className="bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-600">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[12px] font-medium uppercase tracking-wider text-blue-100">
+            <CardTitle className="text-[12px] font-medium tracking-wider text-blue-100 uppercase">
               Revenue Today
             </CardTitle>
             <DollarSign className="h-4 w-4 text-blue-100" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold tracking-tight">${(stats.revenueToday ?? 0).toLocaleString()}</div>
+            <div className="text-2xl font-semibold tracking-tight">
+              ${(stats.revenueToday ?? 0).toLocaleString()}
+            </div>
             <p className="mt-1 text-xs font-medium text-blue-100/70 italic">
               +12.5% from yesterday
             </p>
@@ -97,14 +106,16 @@ export default function OverviewPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[12px] font-medium uppercase tracking-wider text-blue-500">
+            <CardTitle className="text-[12px] font-medium tracking-wider text-blue-500 uppercase">
               Orders Today
             </CardTitle>
             <ShoppingCart className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">{stats.totalOrdersToday}</div>
-            <p className="mt-1 text-xs font-medium text-blue-600 dark:text-blue-400 italic">
+            <div className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">
+              {stats.totalOrdersToday}
+            </div>
+            <p className="mt-1 text-xs font-medium text-blue-600 italic dark:text-blue-400">
               {stats.statusSummary.pending} pending approval
             </p>
           </CardContent>
@@ -112,7 +123,7 @@ export default function OverviewPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[12px] font-medium uppercase tracking-wider text-red-500">
+            <CardTitle className="text-[12px] font-medium tracking-wider text-red-500 uppercase">
               Low Stock
             </CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-400" />
@@ -129,7 +140,7 @@ export default function OverviewPage() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-[12px] font-medium uppercase tracking-wider text-green-600">
+            <CardTitle className="text-[12px] font-medium tracking-wider text-green-600 uppercase">
               Completed
             </CardTitle>
             <TrendingUp className="h-4 w-4 text-green-400" />
@@ -149,45 +160,72 @@ export default function OverviewPage() {
         {/* Analytics Chart */}
         <Card className="lg:col-span-4">
           <CardHeader>
-            <CardTitle className="text-lg font-semibold text-blue-900 dark:text-blue-100">Revenue Trend</CardTitle>
-            <CardDescription className="text-sm text-blue-500/70">Daily sales performance for the last 7 days</CardDescription>
+            <CardTitle className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+              Revenue Trend
+            </CardTitle>
+            <CardDescription className="text-sm text-blue-500/70">
+              Daily sales performance for the last 7 days
+            </CardDescription>
           </CardHeader>
           <CardContent>
-            <ChartContainer config={chartConfig} className="h-[300px] w-full">
-               <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={chartData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                    <defs>
-                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="var(--color-blue-600)" stopOpacity={0.15} />
-                        <stop offset="95%" stopColor="var(--color-blue-600)" stopOpacity={0} />
-                      </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="4 4" vertical={false} stroke="hsl(var(--color-blue-200) / 0.5)" />
-                    <XAxis
-                      dataKey="_id"
-                      axisLine={false}
-                      tickLine={false}
-                      tickMargin={12}
-                      tickFormatter={(value) => value.split("-").slice(1).join("/")}
-                      className="text-[10px] font-medium text-blue-400 uppercase tracking-widest"
-                    />
-                    <YAxis
-                      axisLine={false}
-                      tickLine={false}
-                      tickMargin={12}
-                      className="text-[10px] font-medium text-blue-400"
-                    />
-                    <ChartTooltip content={<ChartTooltipContent />} />
-                    <Area
-                      type="monotone"
-                      dataKey="revenue"
-                      stroke="var(--color-blue-600)"
-                      strokeWidth={2}
-                      fillOpacity={1}
-                      fill="url(#colorRevenue)"
-                    />
-                  </AreaChart>
-               </ResponsiveContainer>
+            <ChartContainer config={chartConfig} className="h-75 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart
+                  data={chartData}
+                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+                >
+                  <defs>
+                    <linearGradient
+                      id="colorRevenue"
+                      x1="0"
+                      y1="0"
+                      x2="0"
+                      y2="1"
+                    >
+                      <stop
+                        offset="5%"
+                        stopColor="var(--color-blue-600)"
+                        stopOpacity={0.15}
+                      />
+                      <stop
+                        offset="95%"
+                        stopColor="var(--color-blue-600)"
+                        stopOpacity={0}
+                      />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid
+                    strokeDasharray="4 4"
+                    vertical={false}
+                    stroke="hsl(var(--color-blue-200) / 0.5)"
+                  />
+                  <XAxis
+                    dataKey="_id"
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={12}
+                    tickFormatter={(value) =>
+                      value.split("-").slice(1).join("/")
+                    }
+                    className="text-[10px] font-medium tracking-widest text-blue-400 uppercase"
+                  />
+                  <YAxis
+                    axisLine={false}
+                    tickLine={false}
+                    tickMargin={12}
+                    className="text-[10px] font-medium text-blue-400"
+                  />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Area
+                    type="monotone"
+                    dataKey="revenue"
+                    stroke="var(--color-blue-600)"
+                    strokeWidth={2}
+                    fillOpacity={1}
+                    fill="url(#colorRevenue)"
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
             </ChartContainer>
           </CardContent>
         </Card>
@@ -196,32 +234,48 @@ export default function OverviewPage() {
         <Card className="lg:col-span-3">
           <CardHeader className="flex flex-row items-center justify-between">
             <div className="space-y-1">
-              <CardTitle className="text-lg font-semibold text-blue-900 dark:text-blue-100">Recent Activity</CardTitle>
-              <CardDescription className="text-sm text-blue-500/70">Latest system logs</CardDescription>
+              <CardTitle className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+                Recent Activity
+              </CardTitle>
+              <CardDescription className="text-sm text-blue-500/70">
+                Latest system logs
+              </CardDescription>
             </div>
             <Clock className="h-4 w-4 text-blue-400" />
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
               {(stats.recentActivities ?? []).length === 0 ? (
-                <p className="text-sm text-muted-foreground py-4 text-center">No recent activity.</p>
+                <p className="text-muted-foreground py-4 text-center text-sm">
+                  No recent activity.
+                </p>
               ) : (
-                (stats.recentActivities ?? []).slice(0, 6).map((activity: any, i: number) => (
-                  <div key={i} className="flex gap-4">
-                    <div className={cn(
-                      "mt-1 flex h-1.5 w-1.5 shrink-0 rounded-full",
-                      activity.type === "order" ? "bg-blue-600" : "bg-amber-500"
-                    )} />
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium leading-none text-blue-900 dark:text-blue-100">
-                        {activity.action}
-                      </p>
-                      <p className="text-[10px] font-medium uppercase tracking-wider text-blue-400">
-                        {new Date(activity.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} • {activity.user?.name || "System"}
-                      </p>
+                (stats.recentActivities ?? [])
+                  .slice(0, 6)
+                  .map((activity: any, i: number) => (
+                    <div key={i} className="flex gap-4">
+                      <div
+                        className={cn(
+                          "mt-1 flex h-1.5 w-1.5 shrink-0 rounded-full",
+                          activity.type === "order"
+                            ? "bg-blue-600"
+                            : "bg-amber-500",
+                        )}
+                      />
+                      <div className="space-y-1">
+                        <p className="text-sm leading-none font-medium text-blue-900 dark:text-blue-100">
+                          {activity.action}
+                        </p>
+                        <p className="text-[10px] font-medium tracking-wider text-blue-400 uppercase">
+                          {new Date(activity.createdAt).toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}{" "}
+                          • {activity.user?.name || "System"}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))
+                  ))
               )}
             </div>
           </CardContent>
@@ -229,11 +283,15 @@ export default function OverviewPage() {
       </div>
 
       {/* Product Summary */}
-      <Card className="p-0 overflow-hidden border-blue-100 dark:border-blue-800">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-blue-100 bg-blue-50/30 dark:border-blue-800 dark:bg-blue-900/20">
+      <Card className="overflow-hidden border-blue-100 p-0 dark:border-blue-800">
+        <div className="flex items-center justify-between border-b border-blue-100 bg-blue-50/30 px-6 py-4 dark:border-blue-800 dark:bg-blue-900/20">
           <div className="space-y-0.5">
-            <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">Inventory Highlights</h3>
-            <p className="text-sm text-blue-500/70">Quick view of current stock status</p>
+            <h3 className="text-lg font-semibold text-blue-900 dark:text-blue-100">
+              Inventory Highlights
+            </h3>
+            <p className="text-sm text-blue-500/70">
+              Quick view of current stock status
+            </p>
           </div>
           <Package className="h-4 w-4 text-blue-400" />
         </div>
@@ -248,17 +306,31 @@ export default function OverviewPage() {
             </TableHeader>
             <TableBody>
               {(stats.productSummary ?? []).length === 0 ? (
-                 <TableRow>
-                    <TableCell colSpan={3} className="h-24 text-center text-blue-500/50">No products available.</TableCell>
-                 </TableRow>
+                <TableRow>
+                  <TableCell
+                    colSpan={3}
+                    className="h-24 text-center text-blue-500/50"
+                  >
+                    No products available.
+                  </TableCell>
+                </TableRow>
               ) : (
                 (stats.productSummary ?? []).map((product: any, i: number) => (
-                  <TableRow key={i} className="hover:bg-blue-50/30 dark:hover:bg-blue-900/40 border-b border-blue-50 dark:border-blue-900 last:border-0">
-                    <TableCell className="font-medium text-blue-900 dark:text-blue-100">{product.name}</TableCell>
-                    <TableCell className="text-center font-medium text-blue-700 dark:text-blue-300">{product.stock}</TableCell>
+                  <TableRow
+                    key={i}
+                    className="border-b border-blue-50 last:border-0 hover:bg-blue-50/30 dark:border-blue-900 dark:hover:bg-blue-900/40"
+                  >
+                    <TableCell className="font-medium text-blue-900 dark:text-blue-100">
+                      {product.name}
+                    </TableCell>
+                    <TableCell className="text-center font-medium text-blue-700 dark:text-blue-300">
+                      {product.stock}
+                    </TableCell>
                     <TableCell className="text-right">
                       <Badge
-                        variant={product.status === "Low Stock" ? "danger" : "success"}
+                        variant={
+                          product.status === "Low Stock" ? "danger" : "success"
+                        }
                       >
                         {product.status}
                       </Badge>

@@ -1,16 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  ArrowRight,
-  Eye,
-  EyeOff,
-  Loader2,
-  Lock,
-  Mail,
-  ShieldCheck,
-  User,
-} from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FC, useEffect, useState } from "react";
@@ -110,7 +101,7 @@ export const RegisterCard: FC = () => {
 
             <Button
               onClick={() => router.push("/")}
-              className="w-full h-10 font-medium"
+              className="h-10 w-full font-medium"
             >
               Continue to Dashboard
             </Button>
@@ -144,7 +135,7 @@ export const RegisterCard: FC = () => {
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
           <div className="space-y-2">
-            <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">
+            <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
               Full Name
             </label>
             <div className="relative">
@@ -155,7 +146,8 @@ export const RegisterCard: FC = () => {
                 {...register("name")}
                 className={cn(
                   "pl-10",
-                  errors.name && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10"
+                  errors.name &&
+                    "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10",
                 )}
               />
             </div>
@@ -167,7 +159,7 @@ export const RegisterCard: FC = () => {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">
+            <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
               Email address
             </label>
             <div className="relative">
@@ -178,7 +170,8 @@ export const RegisterCard: FC = () => {
                 {...register("email")}
                 className={cn(
                   "pl-10",
-                  errors.email && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10"
+                  errors.email &&
+                    "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10",
                 )}
               />
             </div>
@@ -191,7 +184,7 @@ export const RegisterCard: FC = () => {
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">
+              <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
                 Password
               </label>
               <div className="relative">
@@ -201,8 +194,9 @@ export const RegisterCard: FC = () => {
                   placeholder="••••••••"
                   {...register("password")}
                   className={cn(
-                    "pl-10 pr-10",
-                    errors.password && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10"
+                    "pr-10 pl-10",
+                    errors.password &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10",
                   )}
                 />
                 <button
@@ -229,7 +223,7 @@ export const RegisterCard: FC = () => {
               )}
             </div>
             <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">
+              <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
                 Confirm
               </label>
               <div className="relative">
@@ -239,8 +233,9 @@ export const RegisterCard: FC = () => {
                   placeholder="••••••••"
                   {...register("confirmPassword")}
                   className={cn(
-                    "pl-10 pr-10",
-                    errors.confirmPassword && "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10"
+                    "pr-10 pl-10",
+                    errors.confirmPassword &&
+                      "border-red-500 focus-visible:border-red-500 focus-visible:ring-red-500/10",
                   )}
                 />
                 <button
@@ -278,7 +273,7 @@ export const RegisterCard: FC = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full h-11 text-sm font-semibold"
+            className="h-11 w-full text-sm font-semibold"
           >
             {isLoading ? (
               <Loader2 className="h-4 w-4 animate-spin" />
@@ -289,7 +284,9 @@ export const RegisterCard: FC = () => {
 
           <div className="relative flex items-center py-2">
             <div className="grow border-t border-blue-100 dark:border-blue-800"></div>
-            <span className="mx-4 shrink text-[11px] font-medium text-blue-400 uppercase tracking-widest">or</span>
+            <span className="mx-4 shrink text-[11px] font-medium tracking-widest text-blue-400 uppercase">
+              or
+            </span>
             <div className="grow border-t border-blue-100 dark:border-blue-800"></div>
           </div>
         </form>

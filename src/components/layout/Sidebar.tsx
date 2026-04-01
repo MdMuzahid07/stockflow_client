@@ -29,6 +29,7 @@ const menuItems = [
 ];
 
 export function Sidebar() {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -86,7 +87,11 @@ export function SidebarContent({
               className="h-full w-full object-contain"
             />
           </div>
-          {!isCollapsed && <span className="text-lg text-blue-900 dark:text-blue-100">StockFlow</span>}
+          {!isCollapsed && (
+            <span className="text-lg text-blue-900 dark:text-blue-100">
+              StockFlow
+            </span>
+          )}
         </Link>
       </div>
 
@@ -106,8 +111,10 @@ export function SidebarContent({
                   : "text-blue-500/70 hover:bg-blue-50/50 hover:text-blue-600 dark:text-blue-400 dark:hover:bg-blue-800/30",
               )}
             >
-              <item.icon className="h-[18px] w-[18px] shrink-0" />
-              {!isCollapsed && <span className="font-medium">{item.label}</span>}
+              <item.icon className="h-4.5 w-4.5 shrink-0" />
+              {!isCollapsed && (
+                <span className="font-medium">{item.label}</span>
+              )}
             </Link>
           );
         })}
@@ -121,10 +128,10 @@ export function SidebarContent({
               <UserIcon className="h-4 w-4" />
             </div>
             <div className="flex flex-col overflow-hidden text-xs">
-              <span className="font-semibold text-blue-900 truncate dark:text-blue-100">
+              <span className="truncate font-semibold text-blue-900 dark:text-blue-100">
                 {user?.name || "User"}
               </span>
-              <span className="text-blue-500/70 truncate uppercase tracking-widest text-[10px]">
+              <span className="truncate text-[10px] tracking-widest text-blue-500/70 uppercase">
                 {user?.role || "Role"}
               </span>
             </div>
@@ -138,8 +145,8 @@ export function SidebarContent({
           )}
           onClick={handleLogout}
         >
-          <LogOut className="h-[18px] w-[18px]" />
-          {!isCollapsed && <span className="font-medium text-sm">Logout</span>}
+          <LogOut className="h-4.5 w-4.5" />
+          {!isCollapsed && <span className="text-sm font-medium">Logout</span>}
         </Button>
       </div>
     </div>

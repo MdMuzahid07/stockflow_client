@@ -4,7 +4,7 @@ import Link from "next/link";
 
 export default function NotFound() {
   return (
-    <div className="animate-in fade-in flex min-h-[400px] w-full flex-col items-center justify-center p-8 text-center duration-1000">
+    <div className="animate-in fade-in flex min-h-screen w-full flex-col items-center justify-center p-8 text-center duration-1000">
       <div className="relative mb-8">
         <div className="absolute inset-0 animate-pulse rounded-full bg-blue-600/10 blur-3xl" />
         <div className="relative flex h-24 w-24 items-center justify-center rounded-3xl bg-blue-600 text-white shadow-2xl shadow-blue-500/40">
@@ -19,8 +19,8 @@ export default function NotFound() {
         Page Not Found
       </h2>
       <p className="text-muted-foreground mb-10 max-w-sm text-sm font-medium">
-        The page you are looking for doesn't exist or has been moved to another
-        coordinate.
+        The page you are looking for {`doesn't`} exist or has been moved to
+        another coordinate.
       </p>
 
       <Button

@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -17,7 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { cn } from "@/lib/utils";
 import {
   useGetRestockQueueQuery,
   useRestockProductMutation,
@@ -32,7 +33,6 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Card } from "@/components/ui/card";
 
 export default function RestockQueuePage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -85,7 +85,9 @@ export default function RestockQueuePage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">Restock Queue</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">
+            Restock Queue
+          </h1>
           <p className="text-sm text-blue-500/70">
             Replenishment monitoring. Items stay here until stock is restored.
           </p>
@@ -93,7 +95,7 @@ export default function RestockQueuePage() {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <Card className="bg-blue-600 text-white dark:bg-blue-600 dark:border-blue-500">
+        <Card className="bg-blue-600 text-white dark:border-blue-500 dark:bg-blue-600">
           <div className="flex items-center gap-4 p-6">
             <div className="rounded-lg bg-white/20 p-3 backdrop-blur-sm">
               <AlertCircle className="h-6 w-6 text-blue-50" />
@@ -102,7 +104,7 @@ export default function RestockQueuePage() {
               <p className="text-[10px] font-semibold tracking-[0.2em] text-blue-100 uppercase">
                 Pending Replenishment
               </p>
-              <p className="text-3xl font-semibold mt-0.5">{queue.length}</p>
+              <p className="mt-0.5 text-3xl font-semibold">{queue.length}</p>
             </div>
           </div>
         </Card>
@@ -115,7 +117,7 @@ export default function RestockQueuePage() {
               <p className="text-[10px] font-semibold tracking-[0.2em] text-blue-400 uppercase">
                 High Priority
               </p>
-              <p className="text-3xl font-semibold text-blue-900 dark:text-blue-100 mt-0.5">
+              <p className="mt-0.5 text-3xl font-semibold text-blue-900 dark:text-blue-100">
                 {queue.filter((i: any) => i.priority === "High").length}
               </p>
             </div>
@@ -130,14 +132,16 @@ export default function RestockQueuePage() {
               <p className="text-[10px] font-semibold tracking-[0.2em] text-blue-400 uppercase">
                 System Status
               </p>
-              <p className="text-sm font-semibold text-blue-600 mt-1 dark:text-blue-400 uppercase tracking-wider">Replenish Active</p>
+              <p className="mt-1 text-sm font-semibold tracking-wider text-blue-600 uppercase dark:text-blue-400">
+                Replenish Active
+              </p>
             </div>
           </div>
         </Card>
       </div>
 
       <Card className="overflow-hidden">
-        <div className="p-4 border-b">
+        <div className="border-b p-4">
           <div className="relative w-full max-w-sm">
             <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
@@ -152,31 +156,52 @@ export default function RestockQueuePage() {
         <div className="w-full">
           <Table>
             <TableHeader className="bg-white dark:bg-blue-950">
-              <TableRow className="border-b border-blue-100 dark:border-blue-800 hover:bg-transparent">
-                <TableHead className="w-[80px] text-[10px] uppercase tracking-wider font-bold">Product</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider font-bold">Details</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider font-bold">Category</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider font-bold">Stock Status</TableHead>
-                <TableHead className="text-[10px] uppercase tracking-wider font-bold">Priority</TableHead>
-                <TableHead className="text-right text-[10px] uppercase tracking-wider font-bold">Actions</TableHead>
+              <TableRow className="border-b border-blue-100 hover:bg-transparent dark:border-blue-800">
+                <TableHead className="w-20 text-[10px] font-bold tracking-wider uppercase">
+                  Product
+                </TableHead>
+                <TableHead className="text-[10px] font-bold tracking-wider uppercase">
+                  Details
+                </TableHead>
+                <TableHead className="text-[10px] font-bold tracking-wider uppercase">
+                  Category
+                </TableHead>
+                <TableHead className="text-[10px] font-bold tracking-wider uppercase">
+                  Stock Status
+                </TableHead>
+                <TableHead className="text-[10px] font-bold tracking-wider uppercase">
+                  Priority
+                </TableHead>
+                <TableHead className="text-right text-[10px] font-bold tracking-wider uppercase">
+                  Actions
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-[52px] text-center text-blue-500/50">
+                  <TableCell
+                    colSpan={6}
+                    className="h-13 text-center text-blue-500/50"
+                  >
                     Loading queue...
                   </TableCell>
                 </TableRow>
               ) : filteredQueue.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-[52px] text-center text-blue-500/50">
+                  <TableCell
+                    colSpan={6}
+                    className="h-13 text-center text-blue-500/50"
+                  >
                     No items in replenishment queue.
                   </TableCell>
                 </TableRow>
               ) : (
                 (filteredQueue ?? []).map((item: any) => (
-                  <TableRow key={item._id} className="h-[52px] group transition-colors">
+                  <TableRow
+                    key={item._id}
+                    className="group h-13 transition-colors"
+                  >
                     <TableCell>
                       <div className="bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded">
                         <Package className="h-4 w-4" />
@@ -193,7 +218,7 @@ export default function RestockQueuePage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <span className="text-xs text-muted-foreground">
+                      <span className="text-muted-foreground text-xs">
                         {item.product.category?.name || "N/A"}
                       </span>
                     </TableCell>
@@ -241,25 +266,37 @@ export default function RestockQueuePage() {
                   <Package className="h-5 w-5" />
                 </div>
                 <div className="space-y-0.5">
-                  <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">{selectedItem.product.name}</p>
+                  <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                    {selectedItem.product.name}
+                  </p>
                   <p className="text-xs text-blue-500/70">
-                    Current availability: <span className="font-semibold text-red-500">{selectedItem.currentStock}</span>
+                    Current availability:{" "}
+                    <span className="font-semibold text-red-500">
+                      {selectedItem.currentStock}
+                    </span>
                   </p>
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic ml-1">Quantity to Replenish</label>
+                <label className="ml-1 text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Quantity to Replenish
+                </label>
                 <Input
                   type="number"
                   value={addedStock}
                   onChange={(e) => setAddedStock(parseInt(e.target.value))}
                   className="h-11"
                 />
-                <div className="flex items-center gap-2 mt-2 px-1">
+                <div className="mt-2 flex items-center gap-2 px-1">
                   <div className="h-1.5 w-1.5 rounded-full bg-blue-400" />
                   <p className="text-[11px] font-medium text-blue-400">
-                    New inventory level will be <span className="text-blue-600 dark:text-blue-300 font-bold">{selectedItem.currentStock + (isNaN(addedStock) ? 0 : addedStock)}</span> units
+                    New inventory level will be{" "}
+                    <span className="font-bold text-blue-600 dark:text-blue-300">
+                      {selectedItem.currentStock +
+                        (isNaN(addedStock) ? 0 : addedStock)}
+                    </span>{" "}
+                    units
                   </p>
                 </div>
               </div>

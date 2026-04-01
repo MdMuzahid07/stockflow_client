@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -21,9 +23,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   useCancelOrderMutation,
   useCreateOrderMutation,
@@ -166,7 +174,10 @@ export default function OrdersPage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const variants: Record<string, "info" | "secondary" | "success" | "warning" | "danger"> = {
+    const variants: Record<
+      string,
+      "info" | "secondary" | "success" | "warning" | "danger"
+    > = {
       pending: "info",
       confirmed: "info",
       shipped: "warning",
@@ -176,7 +187,7 @@ export default function OrdersPage() {
     return (
       <Badge
         variant={variants[status] || "secondary"}
-        className="capitalize px-3 py-0.5 text-[11px]"
+        className="px-3 py-0.5 text-[11px] capitalize"
       >
         {status}
       </Badge>
@@ -203,21 +214,21 @@ export default function OrdersPage() {
         </Button>
       </div>
 
-      <Card className="p-0 overflow-hidden border-blue-100 dark:border-blue-800">
-        <div className="flex flex-col gap-4 p-5 md:flex-row md:items-center border-b border-blue-50 bg-blue-50/20 dark:border-blue-900/30 dark:bg-blue-900/10">
+      <Card className="overflow-hidden border-blue-100 p-0 dark:border-blue-800">
+        <div className="flex flex-col gap-4 border-b border-blue-50 bg-blue-50/20 p-5 md:flex-row md:items-center dark:border-blue-900/30 dark:bg-blue-900/10">
           <div className="relative flex-1">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-blue-400" />
             <Input
               placeholder="Search by customer name or order ID..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-10 border-blue-100 dark:border-blue-800 bg-white dark:bg-blue-950/50"
+              className="h-10 border-blue-100 bg-white pl-10 dark:border-blue-800 dark:bg-blue-950/50"
             />
           </div>
           <div className="flex items-center gap-2">
             <Filter className="h-4 w-4 text-blue-400" />
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px] h-10 border-blue-100 dark:border-blue-800 bg-white dark:bg-blue-950/50">
+              <SelectTrigger className="h-10 w-[180px] border-blue-100 bg-white dark:border-blue-800 dark:bg-blue-950/50">
                 <SelectValue placeholder="Filter Status" />
               </SelectTrigger>
               <SelectContent className="border-blue-100 dark:border-blue-800">
@@ -251,13 +262,19 @@ export default function OrdersPage() {
             <TableBody>
               {isOrdersLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-blue-500/50">
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-blue-500/50"
+                  >
                     Loading orders...
                   </TableCell>
                 </TableRow>
               ) : orders.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-blue-500/50">
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-blue-500/50"
+                  >
                     No orders found.
                   </TableCell>
                 </TableRow>
@@ -265,9 +282,9 @@ export default function OrdersPage() {
                 orders.map((order: any) => (
                   <TableRow
                     key={order._id}
-                    className="hover:bg-blue-50/50 dark:hover:bg-blue-900/40 border-b border-blue-50 dark:border-blue-900 last:border-0"
+                    className="border-b border-blue-50 last:border-0 hover:bg-blue-50/50 dark:border-blue-900 dark:hover:bg-blue-900/40"
                   >
-                    <TableCell className="text-blue-400 font-mono text-[10px] tracking-widest">
+                    <TableCell className="font-mono text-[10px] tracking-widest text-blue-400">
                       #{order._id.slice(-6).toUpperCase()}
                     </TableCell>
                     <TableCell>
@@ -281,7 +298,7 @@ export default function OrdersPage() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="text-blue-500 dark:text-blue-400 flex items-center gap-1.5 text-xs font-medium">
+                      <div className="flex items-center gap-1.5 text-xs font-medium text-blue-500 dark:text-blue-400">
                         <Calendar className="h-3 w-3" />
                         {new Date(order.createdAt).toLocaleDateString()}
                       </div>
@@ -352,16 +369,21 @@ export default function OrdersPage() {
             </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 pt-6">
-            <div className="bg-blue-50/30 dark:bg-blue-900/10 grid grid-cols-2 gap-5 rounded-lg border border-blue-100/50 dark:border-blue-800/50 p-5">
-              <h3 className="text-blue-400 col-span-2 text-[11px] font-semibold tracking-widest uppercase mb-1">
+            <div className="grid grid-cols-2 gap-5 rounded-lg border border-blue-100/50 bg-blue-50/30 p-5 dark:border-blue-800/50 dark:bg-blue-900/10">
+              <h3 className="col-span-2 mb-1 text-[11px] font-semibold tracking-widest text-blue-400 uppercase">
                 Customer Information
               </h3>
               <div className="col-span-2 space-y-2">
-                <label className="text-xs font-medium text-blue-900 dark:text-blue-100 italic ml-1">Full Name</label>
+                <label className="ml-1 text-xs font-medium text-blue-900 italic dark:text-blue-100">
+                  Full Name
+                </label>
                 <Input
                   placeholder="Enter customer name"
                   {...register("customer.name")}
-                  className={cn("h-10", errors.customer?.name && "border-red-500")}
+                  className={cn(
+                    "h-10",
+                    errors.customer?.name && "border-red-500",
+                  )}
                 />
                 {errors.customer?.name && (
                   <p className="text-xs font-medium text-red-500">
@@ -370,11 +392,16 @@ export default function OrdersPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-medium text-blue-900 dark:text-blue-100 italic ml-1">Phone Number</label>
+                <label className="ml-1 text-xs font-medium text-blue-900 italic dark:text-blue-100">
+                  Phone Number
+                </label>
                 <Input
                   placeholder="e.g. +1 234 567 890"
                   {...register("customer.phone")}
-                  className={cn("h-10", errors.customer?.phone && "border-red-500")}
+                  className={cn(
+                    "h-10",
+                    errors.customer?.phone && "border-red-500",
+                  )}
                 />
                 {errors.customer?.phone && (
                   <p className="text-xs font-medium text-red-500">
@@ -383,11 +410,16 @@ export default function OrdersPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-xs font-medium text-blue-900 dark:text-blue-100 italic ml-1">Shipping Address</label>
+                <label className="ml-1 text-xs font-medium text-blue-900 italic dark:text-blue-100">
+                  Shipping Address
+                </label>
                 <Input
                   placeholder="Enter full address"
                   {...register("customer.address")}
-                  className={cn("h-10", errors.customer?.address && "border-red-500")}
+                  className={cn(
+                    "h-10",
+                    errors.customer?.address && "border-red-500",
+                  )}
                 />
                 {errors.customer?.address && (
                   <p className="text-xs font-medium text-red-500">
@@ -398,8 +430,8 @@ export default function OrdersPage() {
             </div>
 
             <div className="space-y-5">
-              <div className="flex items-center justify-between border-b border-blue-50 dark:border-blue-900 pb-2">
-                <h3 className="text-blue-400 text-[11px] font-semibold tracking-widest uppercase">
+              <div className="flex items-center justify-between border-b border-blue-50 pb-2 dark:border-blue-900">
+                <h3 className="text-[11px] font-semibold tracking-widest text-blue-400 uppercase">
                   Order Items
                 </h3>
                 <Button
@@ -506,13 +538,17 @@ export default function OrdersPage() {
               </div>
             </div>
 
-            <div className="flex items-center justify-between border-t border-blue-100 dark:border-blue-800 pt-8">
+            <div className="flex items-center justify-between border-t border-blue-100 pt-8 dark:border-blue-800">
               <div className="flex flex-col gap-0.5">
-                <span className="text-blue-400 text-[10px] font-semibold tracking-[0.2em] uppercase">
+                <span className="text-[10px] font-semibold tracking-[0.2em] text-blue-400 uppercase">
                   Total Payable
                 </span>
                 <span className="text-3xl font-semibold tracking-tight text-blue-600 dark:text-blue-400">
-                  ${(totalAmount ?? 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                  $
+                  {(totalAmount ?? 0).toLocaleString(undefined, {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                  })}
                 </span>
               </div>
               <div className="flex gap-3">
@@ -539,74 +575,97 @@ export default function OrdersPage() {
 
       {/* View Details Modal */}
       <Dialog open={!!viewingOrder} onOpenChange={() => setViewingOrder(null)}>
-        <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden">
+        <DialogContent className="overflow-hidden p-0 sm:max-w-[600px]">
           {viewingOrder && (
             <>
-              <div className="p-6 border-b border-blue-50 bg-blue-50/20 dark:border-blue-900/30 dark:bg-blue-900/10">
+              <div className="border-b border-blue-50 bg-blue-50/20 p-6 dark:border-blue-900/30 dark:bg-blue-900/10">
                 <DialogHeader>
                   <DialogTitle className="flex items-center justify-between">
-                    <span className="text-xl font-semibold text-blue-900 dark:text-blue-100">Order Manifest</span>
+                    <span className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+                      Order Manifest
+                    </span>
                     {getStatusBadge(viewingOrder.status)}
                   </DialogTitle>
                 </DialogHeader>
               </div>
 
-              <div className="p-6 space-y-8">
+              <div className="space-y-8 p-6">
                 <div className="grid grid-cols-2 gap-8">
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-semibold tracking-widest uppercase text-blue-400 flex items-center gap-2">
+                    <h4 className="flex items-center gap-2 text-[10px] font-semibold tracking-widest text-blue-400 uppercase">
                       <User className="h-3 w-3" /> Customer Metadata
                     </h4>
-                    <div className="space-y-1 ml-1">
-                      <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">{viewingOrder.customer.name}</p>
-                      <p className="text-xs text-blue-500/70">{viewingOrder.customer.phone}</p>
-                      <p className="text-xs text-blue-500/70 leading-relaxed">{viewingOrder.customer.address}</p>
+                    <div className="ml-1 space-y-1">
+                      <p className="text-sm font-semibold text-blue-900 dark:text-blue-100">
+                        {viewingOrder.customer.name}
+                      </p>
+                      <p className="text-xs text-blue-500/70">
+                        {viewingOrder.customer.phone}
+                      </p>
+                      <p className="text-xs leading-relaxed text-blue-500/70">
+                        {viewingOrder.customer.address}
+                      </p>
                     </div>
                   </div>
                   <div className="space-y-3">
-                    <h4 className="text-[10px] font-semibold tracking-widest uppercase text-blue-400 flex items-center gap-2">
+                    <h4 className="flex items-center gap-2 text-[10px] font-semibold tracking-widest text-blue-400 uppercase">
                       <Calendar className="h-3 w-3" /> Registry Information
                     </h4>
-                    <div className="space-y-1 ml-1">
+                    <div className="ml-1 space-y-1">
                       <div className="flex justify-between text-[11px]">
                         <span className="text-blue-400">Date</span>
-                        <span className="font-medium text-blue-900 dark:text-blue-100">{new Date(viewingOrder.createdAt).toLocaleString()}</span>
+                        <span className="font-medium text-blue-900 dark:text-blue-100">
+                          {new Date(viewingOrder.createdAt).toLocaleString()}
+                        </span>
                       </div>
                       <div className="flex justify-between text-[11px]">
                         <span className="text-blue-400">Reference ID</span>
-                        <span className="font-mono text-blue-900 dark:text-blue-100">#{viewingOrder._id.slice(-8).toUpperCase()}</span>
+                        <span className="font-mono text-blue-900 dark:text-blue-100">
+                          #{viewingOrder._id.slice(-8).toUpperCase()}
+                        </span>
                       </div>
                     </div>
                   </div>
                 </div>
 
                 <div className="space-y-3">
-                  <h4 className="text-[10px] font-semibold tracking-widest uppercase text-blue-400 flex items-center gap-2">
+                  <h4 className="flex items-center gap-2 text-[10px] font-semibold tracking-widest text-blue-400 uppercase">
                     <ShoppingCart className="h-3 w-3" /> Line-Item Breakdown
                   </h4>
-                  <div className="rounded-xl border border-blue-100/50 dark:border-blue-800/50 overflow-hidden">
+                  <div className="overflow-hidden rounded-xl border border-blue-100/50 dark:border-blue-800/50">
                     <Table>
                       <TableHeader className="bg-blue-50/30 dark:bg-blue-900/10">
-                        <TableRow className="border-b border-blue-50 dark:border-blue-900 last:border-0 hover:bg-transparent">
-                          <TableHead className="h-9 text-[10px] text-blue-400 font-semibold uppercase">Product</TableHead>
-                          <TableHead className="h-9 text-right text-[10px] text-blue-400 font-semibold uppercase">Price</TableHead>
-                          <TableHead className="h-9 text-center text-[10px] text-blue-400 font-semibold uppercase">Qty</TableHead>
-                          <TableHead className="h-9 text-right text-[10px] text-blue-400 font-semibold uppercase">Total</TableHead>
+                        <TableRow className="border-b border-blue-50 last:border-0 hover:bg-transparent dark:border-blue-900">
+                          <TableHead className="h-9 text-[10px] font-semibold text-blue-400 uppercase">
+                            Product
+                          </TableHead>
+                          <TableHead className="h-9 text-right text-[10px] font-semibold text-blue-400 uppercase">
+                            Price
+                          </TableHead>
+                          <TableHead className="h-9 text-center text-[10px] font-semibold text-blue-400 uppercase">
+                            Qty
+                          </TableHead>
+                          <TableHead className="h-9 text-right text-[10px] font-semibold text-blue-400 uppercase">
+                            Total
+                          </TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {viewingOrder.items.map((item: any, i: number) => (
-                          <TableRow key={i} className="border-b border-blue-50/50 dark:border-blue-900/30 last:border-0 h-11">
-                            <TableCell className="text-xs font-medium text-blue-900 dark:text-blue-100 py-2">
+                          <TableRow
+                            key={i}
+                            className="h-11 border-b border-blue-50/50 last:border-0 dark:border-blue-900/30"
+                          >
+                            <TableCell className="py-2 text-xs font-medium text-blue-900 dark:text-blue-100">
                               {item.product?.name || "Deleted Product"}
                             </TableCell>
-                            <TableCell className="text-right text-xs text-blue-500/70 font-medium py-2">
+                            <TableCell className="py-2 text-right text-xs font-medium text-blue-500/70">
                               ${item.unitPrice.toFixed(2)}
                             </TableCell>
-                            <TableCell className="text-center text-xs text-blue-900 dark:text-blue-100 font-medium py-2">
+                            <TableCell className="py-2 text-center text-xs font-medium text-blue-900 dark:text-blue-100">
                               {item.quantity}
                             </TableCell>
-                            <TableCell className="text-right text-xs font-semibold text-blue-900 dark:text-blue-100 py-2">
+                            <TableCell className="py-2 text-right text-xs font-semibold text-blue-900 dark:text-blue-100">
                               ${(item.unitPrice * item.quantity).toFixed(2)}
                             </TableCell>
                           </TableRow>
@@ -618,13 +677,19 @@ export default function OrdersPage() {
 
                 <div className="flex items-center justify-between rounded-xl bg-blue-600 p-5 text-white shadow-lg shadow-blue-500/10">
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-[10px] font-semibold tracking-[0.2em] uppercase text-blue-100/70">
+                    <span className="text-[10px] font-semibold tracking-[0.2em] text-blue-100/70 uppercase">
                       Amount Due
                     </span>
-                    <span className="text-xs text-blue-100/50">Tax included where applicable</span>
+                    <span className="text-xs text-blue-100/50">
+                      Tax included where applicable
+                    </span>
                   </div>
                   <span className="text-2xl font-semibold tracking-tight">
-                    ${viewingOrder.totalAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    $
+                    {viewingOrder.totalAmount.toLocaleString(undefined, {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}
                   </span>
                 </div>
               </div>

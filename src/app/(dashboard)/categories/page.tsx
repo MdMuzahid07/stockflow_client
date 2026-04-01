@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -101,7 +102,9 @@ export default function CategoriesPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">Categories</h1>
+          <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">
+            Categories
+          </h1>
           <p className="text-sm text-blue-500/70">
             Manage your product categories for better organization.
           </p>
@@ -115,15 +118,15 @@ export default function CategoriesPage() {
         </Button>
       </div>
 
-      <Card className="p-0 overflow-hidden border-blue-100 dark:border-blue-800">
-        <div className="p-5 border-b border-blue-50 bg-blue-50/20 dark:border-blue-900/30 dark:bg-blue-900/10">
+      <Card className="overflow-hidden border-blue-100 p-0 dark:border-blue-800">
+        <div className="border-b border-blue-50 bg-blue-50/20 p-5 dark:border-blue-900/30 dark:bg-blue-900/10">
           <div className="relative w-full max-w-sm">
             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-blue-400" />
             <Input
               placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-10 border-blue-100 dark:border-blue-800 bg-white dark:bg-blue-950/50"
+              className="h-10 border-blue-100 bg-white pl-10 dark:border-blue-800 dark:bg-blue-950/50"
             />
           </div>
         </div>
@@ -157,7 +160,7 @@ export default function CategoriesPage() {
                 (filteredCategories ?? []).map((category: any) => (
                   <TableRow
                     key={category._id}
-                    className="hover:bg-blue-50/50 dark:hover:bg-blue-900/40 border-b border-blue-50 dark:border-blue-900 last:border-0"
+                    className="border-b border-blue-50 last:border-0 hover:bg-blue-50/50 dark:border-blue-900 dark:hover:bg-blue-900/40"
                   >
                     <TableCell>
                       <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-900/30">
@@ -208,7 +211,9 @@ export default function CategoriesPage() {
           </DialogHeader>
           <div className="space-y-4 py-6">
             <div className="space-y-2">
-              <label className="text-sm font-medium text-blue-900 dark:text-blue-100 italic">Category Name</label>
+              <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                Category Name
+              </label>
               <Input
                 placeholder="e.g. Electronics"
                 value={categoryName}
