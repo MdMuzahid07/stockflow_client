@@ -16,7 +16,7 @@ export const TestLoginButton = () => {
     try {
       const credentials = {
         email: "mdmuzahid.dev@gmail.com",
-        password: "MyOrbit1@#!@@",
+        password: "stockflow@123",
       };
       const result = await login(credentials).unwrap();
       dispatch(
@@ -34,7 +34,7 @@ export const TestLoginButton = () => {
       onClick={handleTestLogin}
       disabled={isLoading}
       variant="outline"
-      className="border-primary/20 hover:bg-primary/5 hover:border-primary/40 relative h-10 w-full overflow-hidden rounded-xl text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 md:h-11"
+      className="border-primary/20 hover:bg-primary/5 hover:border-primary/40 relative h-10 w-full overflow-hidden rounded text-sm font-bold transition-all hover:scale-[1.01] active:scale-[0.99] disabled:opacity-70 md:h-11"
     >
       {isLoading ? (
         <Loader2 className="h-5 w-5 animate-spin" />

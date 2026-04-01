@@ -53,7 +53,11 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/images/stockflow-logo.png", type: "image/png" },
+    ],
+    apple: "/images/stockflow-logo.png",
   },
 };
 

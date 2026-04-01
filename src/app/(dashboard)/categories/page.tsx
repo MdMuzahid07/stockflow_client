@@ -1,13 +1,18 @@
 "use client";
-import { useState } from "react";
-import { Plus, Search, MoreVertical, Edit2, Trash2, Tags } from "lucide-react";
-import {
-  useGetAllCategoriesQuery,
-  useCreateCategoryMutation,
-  useUpdateCategoryMutation,
-  useDeleteCategoryMutation,
-} from "@/redux/features/category/category.api";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -18,18 +23,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
+  useCreateCategoryMutation,
+  useDeleteCategoryMutation,
+  useGetAllCategoriesQuery,
+  useUpdateCategoryMutation,
+} from "@/redux/features/category/category.api";
+import { Edit2, MoreVertical, Plus, Search, Tags, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
 
 export default function CategoriesPage() {
@@ -39,13 +39,15 @@ export default function CategoriesPage() {
   const [categoryName, setCategoryName] = useState("");
 
   const { data, isLoading } = useGetAllCategoriesQuery(undefined);
-  const [createCategory, { isLoading: isCreating }] = useCreateCategoryMutation();
-  const [updateCategory, { isLoading: isUpdating }] = useUpdateCategoryMutation();
+  const [createCategory, { isLoading: isCreating }] =
+    useCreateCategoryMutation();
+  const [updateCategory, { isLoading: isUpdating }] =
+    useUpdateCategoryMutation();
   const [deleteCategory] = useDeleteCategoryMutation();
 
   const categories = data?.data || [];
   const filteredCategories = categories.filter((cat: any) =>
-    cat.name.toLowerCase().includes(searchTerm.toLowerCase())
+    cat.name.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const handleSubmit = async () => {
@@ -56,7 +58,10 @@ export default function CategoriesPage() {
 
     try {
       if (editingCategory) {
-        await updateCategory({ id: editingCategory._id, name: categoryName }).unwrap();
+        await updateCategory({
+          id: editingCategory._id,
+          name: categoryName,
+        }).unwrap();
         toast.success("Category updated successfully");
       } else {
         await createCategory({ name: categoryName }).unwrap();
@@ -102,22 +107,22 @@ export default function CategoriesPage() {
         </div>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 h-10 rounded-xl px-4 font-bold"
+          className="h-10 rounded bg-blue-600 px-4 font-bold hover:bg-blue-700"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Category
         </Button>
       </div>
 
-      <div className="rounded-2xl border bg-card shadow-sm">
+      <div className="bg-card rounded-2xl border shadow-sm">
         <div className="p-4">
           <div className="relative w-full max-w-sm">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search categories..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 rounded-xl"
+              className="rounded pl-10"
             />
           </div>
         </div>
@@ -140,19 +145,27 @@ export default function CategoriesPage() {
                 </TableRow>
               ) : filteredCategories.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={3} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={3}
+                    className="text-muted-foreground h-24 text-center"
+                  >
                     No categories found.
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredCategories.map((category: any) => (
-                  <TableRow key={category._id} className="group transition-colors">
+                (filteredCategories ?? []).map((category: any) => (
+                  <TableRow
+                    key={category._id}
+                    className="group transition-colors"
+                  >
                     <TableCell>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/20">
+                      <div className="flex h-10 w-10 items-center justify-center rounded bg-blue-50 text-blue-600 dark:bg-blue-900/20">
                         <Tags className="h-5 w-5" />
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium">{category.name}</TableCell>
+                    <TableCell className="font-medium">
+                      {category.name}
+                    </TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -160,8 +173,10 @@ export default function CategoriesPage() {
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl">
-                          <DropdownMenuItem onClick={() => handleEdit(category)}>
+                        <DropdownMenuContent align="end" className="rounded">
+                          <DropdownMenuItem
+                            onClick={() => handleEdit(category)}
+                          >
                             <Edit2 className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
@@ -186,7 +201,9 @@ export default function CategoriesPage() {
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogContent className="rounded-2xl sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingCategory ? "Edit Category" : "Add New Category"}</DialogTitle>
+            <DialogTitle>
+              {editingCategory ? "Edit Category" : "Add New Category"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 py-4">
             <div className="space-y-2">
@@ -195,18 +212,22 @@ export default function CategoriesPage() {
                 placeholder="e.g. Electronics"
                 value={categoryName}
                 onChange={(e) => setCategoryName(e.target.value)}
-                className="rounded-xl"
+                className="rounded"
               />
             </div>
           </div>
           <DialogFooter>
-            <Button variant="ghost" onClick={handleCloseModal} className="rounded-xl">
+            <Button
+              variant="ghost"
+              onClick={handleCloseModal}
+              className="rounded"
+            >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={isCreating || isUpdating}
-              className="bg-blue-600 hover:bg-blue-700 rounded-xl px-8 font-bold"
+              className="rounded bg-blue-600 px-8 font-bold hover:bg-blue-700"
             >
               {editingCategory ? "Update" : "Save"}
             </Button>

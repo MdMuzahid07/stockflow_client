@@ -88,7 +88,7 @@ export default function OverviewPage() {
             <DollarSign className="h-4 w-4 text-blue-100" />
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-black">${stats.revenueToday.toFixed(2)}</div>
+            <div className="text-3xl font-black">${(stats.revenueToday ?? 0).toFixed(2)}</div>
             <p className="mt-1 text-xs font-medium text-blue-100/70">
               +12.5% from yesterday
             </p>
@@ -203,10 +203,10 @@ export default function OverviewPage() {
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
-              {stats.recentActivities.length === 0 ? (
+              {(stats.recentActivities ?? []).length === 0 ? (
                 <p className="text-sm text-muted-foreground py-4 text-center">No recent activity.</p>
               ) : (
-                stats.recentActivities.slice(0, 6).map((activity: any, i: number) => (
+                (stats.recentActivities ?? []).slice(0, 6).map((activity: any, i: number) => (
                   <div key={i} className="flex gap-4">
                     <div className={cn(
                       "mt-1 flex h-2 w-2 shrink-0 rounded-full",
@@ -247,12 +247,12 @@ export default function OverviewPage() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {stats.productSummary.length === 0 ? (
+              {(stats.productSummary ?? []).length === 0 ? (
                  <TableRow>
                     <TableCell colSpan={3} className="h-24 text-center">No products available.</TableCell>
                  </TableRow>
               ) : (
-                stats.productSummary.map((product: any, i: number) => (
+                (stats.productSummary ?? []).map((product: any, i: number) => (
                   <TableRow key={i} className="group hover:bg-muted/30">
                     <TableCell className="font-bold text-sm tracking-tight">{product.name}</TableCell>
                     <TableCell className="text-center font-mono font-medium">{product.stock}</TableCell>

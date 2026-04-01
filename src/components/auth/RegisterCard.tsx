@@ -112,7 +112,7 @@ export const RegisterCard: FC = () => {
 
             <Button
               onClick={() => router.push("/")}
-              className="bg-cyber-gradient shadow-primary/20 w-full rounded-xl font-bold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] md:h-12"
+              className="bg-cyber-gradient shadow-primary/20 w-full rounded font-bold text-white shadow-lg transition-transform hover:scale-[1.02] active:scale-[0.98] md:h-12"
             >
               Continue to Dashboard
             </Button>
@@ -167,7 +167,7 @@ export const RegisterCard: FC = () => {
                     message: "Name must be at least 2 characters",
                   },
                 })}
-                className={`focus:border-primary/50 focus:ring-primary/10 selection:bg-primary/30 border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 h-10 rounded-xl pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.name ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
+                className={`focus:border-primary/50 focus:ring-primary/10 selection:bg-primary/30 border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 h-10 rounded pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.name ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
               />
             </div>
             {errors.name && (
@@ -193,7 +193,7 @@ export const RegisterCard: FC = () => {
                     message: "Invalid email address",
                   },
                 })}
-                className={`focus:border-primary/50 focus:ring-primary/10 selection:bg-primary/30 border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 h-10 rounded-xl pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.email ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
+                className={`focus:border-primary/50 focus:ring-primary/10 selection:bg-primary/30 border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 h-10 rounded pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.email ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
               />
             </div>
             {errors.email && (
@@ -220,7 +220,7 @@ export const RegisterCard: FC = () => {
                       message: "Password must be at least 8 characters",
                     },
                   })}
-                  className={`border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:ring-primary/10 w-full rounded-xl border py-2.5 pr-10 pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.password ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
+                  className={`border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:ring-primary/10 w-full rounded border py-2.5 pr-10 pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.password ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
                 />
                 <button
                   type="button"
@@ -257,7 +257,7 @@ export const RegisterCard: FC = () => {
                   {...register("confirmPassword", {
                     required: "Please confirm your password",
                   })}
-                  className={`focus:border-primary/50 focus:ring-primary/10 selection:bg-primary/30 border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 h-10 rounded-xl pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.confirmPassword ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
+                  className={`focus:border-primary/50 focus:ring-primary/10 selection:bg-primary/30 border-border bg-background/50 text-foreground placeholder:text-muted-foreground/50 h-10 rounded pl-10 text-sm transition-all focus:ring-2 md:h-11 ${errors.confirmPassword ? "border-red-500/50 ring-red-500/10 focus:border-red-500/50 focus:ring-red-500/10" : ""}`}
                 />
                 <button
                   type="button"
@@ -285,7 +285,7 @@ export const RegisterCard: FC = () => {
           </div>
 
           {error && (
-            <div className="animate-in fade-in slide-in-from-top-2 rounded-xl border border-red-500/20 bg-red-500/10 p-3 backdrop-blur-md">
+            <div className="animate-in fade-in slide-in-from-top-2 rounded border border-red-500/20 bg-red-500/10 p-3 backdrop-blur-md">
               <div className="text-xs font-bold text-red-500">
                 {(error as any)?.data?.message ||
                   "Registration failed. Please check your inputs."}
@@ -311,7 +311,7 @@ export const RegisterCard: FC = () => {
           <Button
             type="submit"
             disabled={isLoading}
-            className="group bg-cyber-gradient shadow-primary/20 relative h-10 w-full overflow-hidden rounded-xl text-base font-black text-white shadow-lg ring-1 ring-white/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 md:h-12"
+            className="group bg-cyber-gradient shadow-primary/20 relative h-10 w-full overflow-hidden rounded text-base font-black text-white shadow-lg ring-1 ring-white/20 transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-70 md:h-12"
           >
             {isLoading ? (
               <Loader2 className="h-5 w-5 animate-spin" />

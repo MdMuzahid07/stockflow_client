@@ -1,16 +1,5 @@
 "use client";
-import { useState } from "react";
-import {
-  History,
-  Search,
-  Filter,
-  User,
-  ShoppingCart,
-  Package,
-  RefreshCw,
-  Info,
-} from "lucide-react";
-import { useGetRecentLogsQuery } from "@/redux/features/activityLog/activityLog.api";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -19,8 +8,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { useGetRecentLogsQuery } from "@/redux/features/activityLog/activityLog.api";
+import {
+  Filter,
+  History,
+  Info,
+  Package,
+  RefreshCw,
+  Search,
+  ShoppingCart,
+  User,
+} from "lucide-react";
+import { useState } from "react";
 
 export default function ActivityLogPage() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,24 +70,24 @@ export default function ActivityLogPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border bg-card shadow-sm overflow-hidden">
-        <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center">
+      <div className="bg-card overflow-hidden rounded-2xl border shadow-sm">
+        <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center">
           <div className="relative flex-1">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search logs..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 rounded-xl border-none bg-muted/50 focus-visible:ring-1 focus-visible:ring-blue-500/50"
+              className="bg-muted/50 rounded border-none pl-10 focus-visible:ring-1 focus-visible:ring-blue-500/50"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Filter className="text-muted-foreground h-4 w-4" />
             <Select value={typeFilter} onValueChange={setTypeFilter}>
-              <SelectTrigger className="w-[180px] rounded-xl border-none bg-muted/50">
+              <SelectTrigger className="bg-muted/50 w-[180px] rounded border-none">
                 <SelectValue placeholder="All Activities" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded">
                 <SelectItem value="all">All Activities</SelectItem>
                 <SelectItem value="order">Orders</SelectItem>
                 <SelectItem value="product">Products</SelectItem>
@@ -99,44 +99,54 @@ export default function ActivityLogPage() {
 
         <div className="p-6">
           {isLoading ? (
-            <div className="flex h-32 items-center justify-center text-muted-foreground">
+            <div className="text-muted-foreground flex h-32 items-center justify-center">
               Loading system logs...
             </div>
           ) : logs.length === 0 ? (
-            <div className="flex h-32 flex-col items-center justify-center gap-2 text-muted-foreground">
+            <div className="text-muted-foreground flex h-32 flex-col items-center justify-center gap-2">
               <History className="h-8 w-8 opacity-20" />
               <p>No activity logs found.</p>
             </div>
           ) : (
-            <div className="relative space-y-8 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5 before:bg-muted">
+            <div className="before:bg-muted relative space-y-8 before:absolute before:inset-0 before:ml-5 before:h-full before:w-0.5">
               {logs.map((log: any, i: number) => (
-                <div key={log._id} className="relative flex items-start gap-6 group">
-                  <div className={cn(
-                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl shadow-lg ring-4 ring-background transition-transform group-hover:scale-110",
-                    getLogColor(log.type)
-                  )}>
+                <div
+                  key={log._id}
+                  className="group relative flex items-start gap-6"
+                >
+                  <div
+                    className={cn(
+                      "ring-background flex h-10 w-10 shrink-0 items-center justify-center rounded shadow-lg ring-4 transition-transform group-hover:scale-110",
+                      getLogColor(log.type),
+                    )}
+                  >
                     {getLogIcon(log.type)}
                   </div>
                   <div className="flex flex-1 flex-col gap-1 pt-1.5">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="text-sm font-bold tracking-tight text-foreground">
+                    <div className="flex flex-col justify-between gap-2 sm:flex-row sm:items-center sm:gap-4">
+                      <p className="text-foreground text-sm font-bold tracking-tight">
                         {log.action}
                       </p>
-                      <time className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-                        {new Date(log.createdAt).toLocaleString([], { 
-                          month: 'short', day: 'numeric', 
-                          hour: '2-digit', minute: '2-digit' 
+                      <time className="text-muted-foreground text-[10px] font-bold tracking-widest whitespace-nowrap uppercase">
+                        {new Date(log.createdAt).toLocaleString([], {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
                         })}
                       </time>
                     </div>
                     <div className="flex items-center gap-3">
-                       <div className="flex items-center gap-1.5 rounded-full bg-muted/50 px-2 py-0.5 text-[10px] font-medium">
-                          <User className="h-3 w-3" />
-                          {log.user?.name || "System Auto"}
-                       </div>
-                       <Badge variant="outline" className="h-4 border-none bg-blue-50 px-2 text-[8px] font-black uppercase tracking-widest text-blue-600 dark:bg-blue-900/20">
-                          {log.type}
-                       </Badge>
+                      <div className="bg-muted/50 flex items-center gap-1.5 rounded-full px-2 py-0.5 text-[10px] font-medium">
+                        <User className="h-3 w-3" />
+                        {log.user?.name || "System Auto"}
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="h-4 border-none bg-blue-50 px-2 text-[8px] font-black tracking-widest text-blue-600 uppercase dark:bg-blue-900/20"
+                      >
+                        {log.type}
+                      </Badge>
                     </div>
                   </div>
                 </div>

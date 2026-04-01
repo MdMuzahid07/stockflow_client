@@ -1,24 +1,27 @@
 "use client";
-import { useState } from "react";
-import {
-  Plus,
-  Search,
-  MoreVertical,
-  Edit2,
-  Trash2,
-  Filter,
-  Package,
-  AlertTriangle,
-} from "lucide-react";
-import {
-  useGetAllProductsQuery,
-  useCreateProductMutation,
-  useUpdateProductMutation,
-  useDeleteProductMutation,
-} from "@/redux/features/product/product.api";
-import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,30 +30,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
+  useCreateProductMutation,
+  useDeleteProductMutation,
+  useGetAllProductsQuery,
+  useUpdateProductMutation,
+} from "@/redux/features/product/product.api";
 import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  AlertTriangle,
+  Edit2,
+  Filter,
+  MoreVertical,
+  Package,
+  Plus,
+  Search,
+  Trash2,
+} from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const productSchema = z.object({
@@ -75,12 +75,13 @@ export default function ProductsPage() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
 
-  const { data: productsData, isLoading: isProductsLoading } = useGetAllProductsQuery({
-    searchTerm,
-    category: categoryFilter !== "all" ? categoryFilter : undefined,
-  });
+  const { data: productsData, isLoading: isProductsLoading } =
+    useGetAllProductsQuery({
+      searchTerm,
+      category: categoryFilter !== "all" ? categoryFilter : undefined,
+    });
   const { data: categoriesData } = useGetAllCategoriesQuery(undefined);
-  
+
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
@@ -152,38 +153,40 @@ export default function ProductsPage() {
     <div className="space-y-6">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Products Catalog</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Products Catalog
+          </h1>
           <p className="text-muted-foreground text-sm">
             Manage your inventory, pricing, and stock levels.
           </p>
         </div>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="bg-blue-600 hover:bg-blue-700 h-10 rounded-xl px-4 font-bold"
+          className="h-10 rounded bg-blue-600 px-4 font-bold hover:bg-blue-700"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
       </div>
 
-      <div className="rounded-2xl border bg-card shadow-sm overflow-hidden">
-        <div className="p-4 flex flex-col gap-4 md:flex-row md:items-center">
+      <div className="bg-card overflow-hidden rounded-2xl border shadow-sm">
+        <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center">
           <div className="relative flex-1">
-            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
             <Input
               placeholder="Search products..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 rounded-xl border-none bg-muted/50 focus-visible:ring-1 focus-visible:ring-blue-500/50"
+              className="bg-muted/50 rounded border-none pl-10 focus-visible:ring-1 focus-visible:ring-blue-500/50"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4 text-muted-foreground" />
+            <Filter className="text-muted-foreground h-4 w-4" />
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="w-[180px] rounded-xl border-none bg-muted/50">
+              <SelectTrigger className="bg-muted/50 w-[180px] rounded border-none">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
-              <SelectContent className="rounded-xl">
+              <SelectContent className="rounded">
                 <SelectItem value="all">All Categories</SelectItem>
                 {categories.map((cat: any) => (
                   <SelectItem key={cat._id} value={cat._id}>
@@ -216,30 +219,46 @@ export default function ProductsPage() {
                 </TableRow>
               ) : products.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                  <TableCell
+                    colSpan={6}
+                    className="text-muted-foreground h-24 text-center"
+                  >
                     No products found.
                   </TableCell>
                 </TableRow>
               ) : (
                 products.map((product: any) => (
-                  <TableRow key={product._id} className="group transition-colors">
+                  <TableRow
+                    key={product._id}
+                    className="group transition-colors"
+                  >
                     <TableCell>
-                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/20">
+                      <div className="flex h-12 w-12 items-center justify-center rounded bg-blue-50 text-blue-600 dark:bg-blue-900/20">
                         <Package className="h-6 w-6" />
                       </div>
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col">
-                        <span className="font-bold text-sm tracking-tight">{product.name}</span>
-                        <span className="text-xs text-muted-foreground">
+                        <span className="text-sm font-bold tracking-tight">
+                          {product.name}
+                        </span>
+                        <span className="text-muted-foreground text-xs">
                           {product.category?.name || "Uncategorized"}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono font-medium">${product.price.toFixed(2)}</TableCell>
+                    <TableCell className="font-mono font-medium">
+                      ${(product.price ?? 0).toFixed(2)}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                         <span className={product.stockQuantity <= product.minThreshold ? "text-red-500 font-bold" : "font-medium"}>
+                        <span
+                          className={
+                            product.stockQuantity <= product.minThreshold
+                              ? "font-bold text-red-500"
+                              : "font-medium"
+                          }
+                        >
                           {product.stockQuantity}
                         </span>
                         {product.stockQuantity <= product.minThreshold && (
@@ -249,10 +268,20 @@ export default function ProductsPage() {
                     </TableCell>
                     <TableCell>
                       <Badge
-                        variant={product.status === "active" ? "default" : "destructive"}
-                        className={product.status === "active" ? "bg-blue-600/10 text-blue-600 hover:bg-blue-600/20" : "bg-red-500/10 text-red-500 hover:bg-red-500/20"}
+                        variant={
+                          product.status === "active"
+                            ? "default"
+                            : "destructive"
+                        }
+                        className={
+                          product.status === "active"
+                            ? "bg-blue-600/10 text-blue-600 hover:bg-blue-600/20"
+                            : "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                        }
                       >
-                        {product.status === "active" ? "Active" : "Out of Stock"}
+                        {product.status === "active"
+                          ? "Active"
+                          : "Out of Stock"}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
@@ -262,7 +291,7 @@ export default function ProductsPage() {
                             <MoreVertical className="h-4 w-4" />
                           </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl">
+                        <DropdownMenuContent align="end" className="rounded">
                           <DropdownMenuItem onClick={() => handleEdit(product)}>
                             <Edit2 className="mr-2 h-4 w-4" />
                             Edit
@@ -288,14 +317,22 @@ export default function ProductsPage() {
       <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
         <DialogContent className="rounded-2xl sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>{editingProduct ? "Update Product" : "Register New Product"}</DialogTitle>
+            <DialogTitle>
+              {editingProduct ? "Update Product" : "Register New Product"}
+            </DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="col-span-2 space-y-2">
                 <label className="text-sm font-medium">Product Name</label>
-                <Input placeholder="e.g. iPhone 15 Pro" {...register("name")} className="rounded-xl" />
-                {errors.name && <p className="text-xs text-red-500">{errors.name.message}</p>}
+                <Input
+                  placeholder="e.g. iPhone 15 Pro"
+                  {...register("name")}
+                  className="rounded"
+                />
+                {errors.name && (
+                  <p className="text-xs text-red-500">{errors.name.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Category</label>
@@ -303,10 +340,10 @@ export default function ProductsPage() {
                   onValueChange={(val: string) => setValue("category", val)}
                   defaultValue={editingProduct?.category?._id || ""}
                 >
-                  <SelectTrigger className="rounded-xl">
+                  <SelectTrigger className="rounded">
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
-                  <SelectContent className="rounded-xl">
+                  <SelectContent className="rounded">
                     {categories.map((cat: any) => (
                       <SelectItem key={cat._id} value={cat._id}>
                         {cat.name}
@@ -314,36 +351,64 @@ export default function ProductsPage() {
                     ))}
                   </SelectContent>
                 </Select>
-                {errors.category && <p className="text-xs text-red-500">{errors.category.message}</p>}
+                {errors.category && (
+                  <p className="text-xs text-red-500">
+                    {errors.category.message}
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Price ($)</label>
-                <Input type="number" step="0.01" {...register("price")} className="rounded-xl" />
-                {errors.price && <p className="text-xs text-red-500">{errors.price.message}</p>}
+                <Input
+                  type="number"
+                  step="0.01"
+                  {...register("price")}
+                  className="rounded"
+                />
+                {errors.price && (
+                  <p className="text-xs text-red-500">{errors.price.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Stock Quantity</label>
-                <Input type="number" {...register("stockQuantity")} className="rounded-xl" />
+                <Input
+                  type="number"
+                  {...register("stockQuantity")}
+                  className="rounded"
+                />
                 {errors.stockQuantity && (
-                  <p className="text-xs text-red-500">{errors.stockQuantity.message}</p>
+                  <p className="text-xs text-red-500">
+                    {errors.stockQuantity.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium">Min. Threshold</label>
-                <Input type="number" {...register("minThreshold")} className="rounded-xl" />
+                <Input
+                  type="number"
+                  {...register("minThreshold")}
+                  className="rounded"
+                />
                 {errors.minThreshold && (
-                  <p className="text-xs text-red-500">{errors.minThreshold.message}</p>
+                  <p className="text-xs text-red-500">
+                    {errors.minThreshold.message}
+                  </p>
                 )}
               </div>
             </div>
             <DialogFooter className="pt-4">
-              <Button type="button" variant="ghost" onClick={handleCloseModal} className="rounded-xl">
+              <Button
+                type="button"
+                variant="ghost"
+                onClick={handleCloseModal}
+                className="rounded"
+              >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isCreating || isUpdating}
-                className="bg-blue-600 hover:bg-blue-700 rounded-xl px-8 font-bold"
+                className="rounded bg-blue-600 px-8 font-bold hover:bg-blue-700"
               >
                 {editingProduct ? "Update Product" : "Save Product"}
               </Button>
