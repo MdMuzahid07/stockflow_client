@@ -40,6 +40,7 @@ import {
   useGetAllProductsQuery,
   useUpdateProductMutation,
 } from "@/redux/features/product/product.api";
+import { useUploadSingleFileMutation } from "@/redux/features/upload/upload.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
   AlertTriangle,
@@ -50,7 +51,9 @@ import {
   Plus,
   Search,
   Trash2,
+  Upload,
 } from "lucide-react";
+import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -62,6 +65,7 @@ const productSchema = z.object({
   price: z.coerce.number().min(0.01, "Price must be greater than 0"),
   stockQuantity: z.coerce.number().min(0, "Stock cannot be negative"),
   minThreshold: z.coerce.number().min(1, "Threshold must be at least 1"),
+  image: z.string().url("Valid image URL is required").optional(),
 });
 
 type ProductFormValues = {
@@ -70,6 +74,7 @@ type ProductFormValues = {
   price: number;
   stockQuantity: number;
   minThreshold: number;
+  image?: string;
 };
 
 export default function ProductsPage() {
@@ -77,6 +82,8 @@ export default function ProductsPage() {
   const [categoryFilter, setCategoryFilter] = useState("all");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
   const { data: productsData, isLoading: isProductsLoading } =
     useGetAllProductsQuery({
@@ -88,6 +95,8 @@ export default function ProductsPage() {
   const [createProduct, { isLoading: isCreating }] = useCreateProductMutation();
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
+  const [uploadSingleFile, { isLoading: isUploading }] =
+    useUploadSingleFileMutation();
 
   const products = productsData?.data?.data || [];
   const categories = categoriesData?.data || [];
@@ -104,11 +113,27 @@ export default function ProductsPage() {
 
   const onSubmit = async (data: ProductFormValues) => {
     try {
+      let imageUrl = data.image || "";
+
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+        const uploadResult = await uploadSingleFile(formData).unwrap();
+        imageUrl = uploadResult.data.url;
+      }
+
+      if (!imageUrl && !editingProduct) {
+        toast.error("Please upload a product image");
+        return;
+      }
+
+      const finalData = { ...data, image: imageUrl };
+
       if (editingProduct) {
-        await updateProduct({ id: editingProduct._id, ...data }).unwrap();
+        await updateProduct({ id: editingProduct._id, ...finalData }).unwrap();
         toast.success("Product updated successfully");
       } else {
-        await createProduct(data).unwrap();
+        await createProduct(finalData).unwrap();
         toast.success("Product created successfully");
       }
       handleCloseModal();
@@ -125,7 +150,9 @@ export default function ProductsPage() {
       price: product.price,
       stockQuantity: product.stockQuantity,
       minThreshold: product.minThreshold,
+      image: product.image,
     });
+    setPreviewUrl(product.image);
     setIsModalOpen(true);
   };
 
@@ -149,7 +176,10 @@ export default function ProductsPage() {
       price: 0,
       stockQuantity: 0,
       minThreshold: 5,
+      image: "",
     });
+    setSelectedFile(null);
+    setPreviewUrl(null);
   };
 
   return (
@@ -239,8 +269,18 @@ export default function ProductsPage() {
                     className="border-b border-blue-50 last:border-0 hover:bg-blue-50/50 dark:border-blue-900 dark:hover:bg-blue-900/40"
                   >
                     <TableCell>
-                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-900/30">
-                        <Package className="h-5 w-5" />
+                      <div className="flex h-10 w-10 items-center justify-center overflow-hidden rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-900/30">
+                        {product.image ? (
+                          <Image
+                            src={product.image}
+                            alt={product.name}
+                            width={40}
+                            height={40}
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <Package className="h-5 w-5" />
+                        )}
                       </div>
                     </TableCell>
                     <TableCell>
@@ -398,7 +438,7 @@ export default function ProductsPage() {
               </div>
               <div className="space-y-2">
                 <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
-                  Alert Threshold
+                  Restock Alert Quantity
                 </label>
                 <Input
                   type="number"
@@ -410,6 +450,45 @@ export default function ProductsPage() {
                     {errors.minThreshold.message}
                   </p>
                 )}
+              </div>
+
+              {/* Image Upload */}
+              <div className="col-span-2 space-y-2">
+                <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Product Image
+                </label>
+                <div className="flex items-center gap-4">
+                  <div className="flex h-24 w-24 shrink-0 items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-blue-100 bg-blue-50/50 dark:border-blue-800 dark:bg-blue-950/30">
+                    {previewUrl ? (
+                      <Image
+                        src={previewUrl}
+                        alt="Preview"
+                        width={96}
+                        height={96}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <Upload className="h-8 w-8 text-blue-400" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-2">
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          setSelectedFile(file);
+                          setPreviewUrl(URL.createObjectURL(file));
+                        }
+                      }}
+                      className="cursor-pointer file:cursor-pointer file:font-semibold"
+                    />
+                    <p className="text-[10px] text-blue-500/70">
+                      Recommended: 800x800px. JPG, PNG or WEBP.
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
             <DialogFooter className="pt-8">
@@ -423,10 +502,14 @@ export default function ProductsPage() {
               </Button>
               <Button
                 type="submit"
-                disabled={isCreating || isUpdating}
+                disabled={isCreating || isUpdating || isUploading}
                 className="px-8 font-semibold"
               >
-                {editingProduct ? "Update product" : "Save product"}
+                {isUploading
+                  ? "Uploading..."
+                  : editingProduct
+                    ? "Update product"
+                    : "Save product"}
               </Button>
             </DialogFooter>
           </form>
