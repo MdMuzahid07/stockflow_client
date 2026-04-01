@@ -1,0 +1,22 @@
+# Build outputs and dependencies
+node_modules/
+.next/
+out/
+build/
+dist/
+.turbo/
+.swc/
+
+# Static assets
+public/
+
+# Config files (often not linted)
+*.config.js
+*.config.ts
+next-env.d.ts
+
+# IDE settings and OS artifacts (optional)
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

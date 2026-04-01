@@ -1,0 +1,44 @@
+# Assets
+*.svg
+*.ico
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.webp
+*.woff
+*.woff2
+
+
+# Documentation
+*.md
+
+# Dependencies & Builds
+/node_modules
+/.next
+/out
+/build
+/dist
+
+# Logs
+*.log
+
+# Env files
+.env*
+/*.tsbuildinfo
+next-env.d.ts
+
+# Cache
+/.turbo
+/.swc
+
+# IDE configs
+/.vscode
+/.idea
+
+# OS artifacts
+.DS_Store
+Thumbs.db
+
+# Scripts
+/scripts/precommit.mjs
