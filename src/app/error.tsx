@@ -18,10 +18,10 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="flex min-h-[400px] w-full flex-col items-center justify-center rounded-3xl border border-red-500/10 bg-red-500/5 p-8 text-center backdrop-blur-sm">
+    <div className="flex min-h-screen w-full flex-col items-center justify-center rounded-3xl border border-red-500/10 bg-red-500/5 p-8 text-center backdrop-blur-sm">
       <div className="relative mb-6">
         <div className="absolute inset-0 animate-ping rounded-full bg-red-500/20" />
-        <div className="relative flex h-16 w-16 items-center justify-center rounded-2xl bg-red-500 text-white shadow-xl shadow-red-500/20">
+        <div className="relative flex h-16 w-16 items-center justify-center rounded-full bg-red-500 text-white shadow-xl shadow-red-500/20">
           <AlertCircle className="h-8 w-8" />
         </div>
       </div>
@@ -54,7 +54,7 @@ export default function Error({
         </Button>
       </div>
 
-      <div className="mt-12 text-[10px] font-bold tracking-[0.3em] text-red-500/30 uppercase">
+      <div className="mt-12 text-[14px] font-bold text-red-500/30">
         Error Code: {error.digest || "INTERNAL_ERROR"}
       </div>
     </div>

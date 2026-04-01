@@ -1,6 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +32,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { useGetAllCategoriesQuery } from "@/redux/features/category/category.api";
 import {
   useCreateProductMutation,
@@ -86,7 +89,7 @@ export default function ProductsPage() {
   const [updateProduct, { isLoading: isUpdating }] = useUpdateProductMutation();
   const [deleteProduct] = useDeleteProductMutation();
 
-  const products = productsData?.data || [];
+  const products = productsData?.data?.data || [];
   const categories = categoriesData?.data || [];
 
   const {
@@ -150,43 +153,43 @@ export default function ProductsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">
+        <div className="flex flex-col gap-1">
+          <h1 className="text-2xl font-semibold tracking-tight text-blue-900 dark:text-blue-100">
             Products Catalog
           </h1>
-          <p className="text-muted-foreground text-sm">
+          <p className="text-sm text-blue-500/70">
             Manage your inventory, pricing, and stock levels.
           </p>
         </div>
         <Button
           onClick={() => setIsModalOpen(true)}
-          className="h-10 rounded bg-blue-600 px-4 font-bold hover:bg-blue-700"
+          className="h-9 px-4 font-medium"
         >
           <Plus className="mr-2 h-4 w-4" />
           Add Product
         </Button>
       </div>
 
-      <div className="bg-card overflow-hidden rounded-2xl border shadow-sm">
-        <div className="flex flex-col gap-4 p-4 md:flex-row md:items-center">
+      <Card className="overflow-hidden border-blue-100 p-0 dark:border-blue-800">
+        <div className="flex flex-col gap-4 border-b border-blue-50 bg-blue-50/20 p-5 md:flex-row md:items-center dark:border-blue-900/30 dark:bg-blue-900/10">
           <div className="relative flex-1">
-            <Search className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-blue-400" />
             <Input
-              placeholder="Search products..."
+              placeholder="Search products by name..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-muted/50 rounded border-none pl-10 focus-visible:ring-1 focus-visible:ring-blue-500/50"
+              className="h-10 border-blue-100 bg-white/50 pl-10 dark:border-blue-800 dark:bg-blue-950/50"
             />
           </div>
           <div className="flex items-center gap-2">
-            <Filter className="text-muted-foreground h-4 w-4" />
+            <Filter className="h-4 w-4 text-blue-400" />
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-              <SelectTrigger className="bg-muted/50 w-[180px] rounded border-none">
+              <SelectTrigger className="h-10 w-[180px] border-blue-100 bg-white/50 dark:border-blue-800 dark:bg-blue-950/50">
                 <SelectValue placeholder="All Categories" />
               </SelectTrigger>
-              <SelectContent className="rounded">
+              <SelectContent className="border-blue-100 dark:border-blue-800">
                 <SelectItem value="all">All Categories</SelectItem>
                 {categories.map((cat: any) => (
                   <SelectItem key={cat._id} value={cat._id}>
@@ -198,22 +201,25 @@ export default function ProductsPage() {
           </div>
         </div>
 
-        <div className="overflow-x-auto">
+        <div className="w-full">
           <Table>
-            <TableHeader>
-              <TableRow className="hover:bg-transparent">
-                <TableHead className="w-[100px] font-bold">Product</TableHead>
-                <TableHead className="font-bold">Name & Category</TableHead>
-                <TableHead className="font-bold">Price</TableHead>
-                <TableHead className="font-bold">Stock</TableHead>
-                <TableHead className="font-bold">Status</TableHead>
-                <TableHead className="text-right font-bold">Actions</TableHead>
+            <TableHeader className="bg-white dark:bg-blue-950">
+              <TableRow className="border-b border-blue-100 dark:border-blue-800">
+                <TableHead className="w-[80px]">Product</TableHead>
+                <TableHead>Details</TableHead>
+                <TableHead>Price</TableHead>
+                <TableHead>Stock</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isProductsLoading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="h-24 text-center">
+                  <TableCell
+                    colSpan={6}
+                    className="h-24 text-center text-blue-500/50"
+                  >
                     Loading products...
                   </TableCell>
                 </TableRow>
@@ -221,7 +227,7 @@ export default function ProductsPage() {
                 <TableRow>
                   <TableCell
                     colSpan={6}
-                    className="text-muted-foreground h-24 text-center"
+                    className="h-24 text-center text-blue-500/50"
                   >
                     No products found.
                   </TableCell>
@@ -230,34 +236,35 @@ export default function ProductsPage() {
                 products.map((product: any) => (
                   <TableRow
                     key={product._id}
-                    className="group transition-colors"
+                    className="border-b border-blue-50 last:border-0 hover:bg-blue-50/50 dark:border-blue-900 dark:hover:bg-blue-900/40"
                   >
                     <TableCell>
-                      <div className="flex h-12 w-12 items-center justify-center rounded bg-blue-50 text-blue-600 dark:bg-blue-900/20">
-                        <Package className="h-6 w-6" />
+                      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50 text-blue-500 dark:bg-blue-900/30">
+                        <Package className="h-5 w-5" />
                       </div>
                     </TableCell>
                     <TableCell>
-                      <div className="flex flex-col">
-                        <span className="text-sm font-bold tracking-tight">
+                      <div className="flex flex-col gap-0.5">
+                        <span className="text-sm font-semibold text-blue-900 dark:text-blue-100">
                           {product.name}
                         </span>
-                        <span className="text-muted-foreground text-xs">
+                        <span className="text-xs text-blue-400">
                           {product.category?.name || "Uncategorized"}
                         </span>
                       </div>
                     </TableCell>
-                    <TableCell className="font-mono font-medium">
+                    <TableCell className="font-medium text-blue-700 dark:text-blue-300">
                       ${(product.price ?? 0).toFixed(2)}
                     </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <span
-                          className={
+                          className={cn(
+                            "font-semibold",
                             product.stockQuantity <= product.minThreshold
-                              ? "font-bold text-red-500"
-                              : "font-medium"
-                          }
+                              ? "text-red-500"
+                              : "text-blue-700 dark:text-blue-300",
+                          )}
                         >
                           {product.stockQuantity}
                         </span>
@@ -269,18 +276,11 @@ export default function ProductsPage() {
                     <TableCell>
                       <Badge
                         variant={
-                          product.status === "active"
-                            ? "default"
-                            : "destructive"
-                        }
-                        className={
-                          product.status === "active"
-                            ? "bg-blue-600/10 text-blue-600 hover:bg-blue-600/20"
-                            : "bg-red-500/10 text-red-500 hover:bg-red-500/20"
+                          product.status === "active" ? "success" : "danger"
                         }
                       >
                         {product.status === "active"
-                          ? "Active"
+                          ? "In Stock"
                           : "Out of Stock"}
                       </Badge>
                     </TableCell>
@@ -312,38 +312,46 @@ export default function ProductsPage() {
             </TableBody>
           </Table>
         </div>
-      </div>
+      </Card>
 
       <Dialog open={isModalOpen} onOpenChange={handleCloseModal}>
-        <DialogContent className="rounded-2xl sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>
-              {editingProduct ? "Update Product" : "Register New Product"}
+            <DialogTitle className="text-xl font-semibold text-blue-900 dark:text-blue-100">
+              {editingProduct ? "Update Product" : "Register Product"}
             </DialogTitle>
           </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 py-4">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4">
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
               <div className="col-span-2 space-y-2">
-                <label className="text-sm font-medium">Product Name</label>
+                <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Product Name
+                </label>
                 <Input
                   placeholder="e.g. iPhone 15 Pro"
                   {...register("name")}
-                  className="rounded"
+                  className={cn(errors.name && "border-red-500")}
                 />
                 {errors.name && (
-                  <p className="text-xs text-red-500">{errors.name.message}</p>
+                  <p className="text-xs font-medium text-red-500">
+                    {errors.name.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Category</label>
+                <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Category
+                </label>
                 <Select
                   onValueChange={(val: string) => setValue("category", val)}
                   defaultValue={editingProduct?.category?._id || ""}
                 >
-                  <SelectTrigger className="rounded">
+                  <SelectTrigger
+                    className={cn("h-10", errors.category && "border-red-500")}
+                  >
                     <SelectValue placeholder="Select Category" />
                   </SelectTrigger>
-                  <SelectContent className="rounded">
+                  <SelectContent className="border-blue-100 dark:border-blue-800">
                     {categories.map((cat: any) => (
                       <SelectItem key={cat._id} value={cat._id}>
                         {cat.name}
@@ -352,65 +360,73 @@ export default function ProductsPage() {
                   </SelectContent>
                 </Select>
                 {errors.category && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs font-medium text-red-500">
                     {errors.category.message}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Price ($)</label>
+                <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Price ($)
+                </label>
                 <Input
                   type="number"
                   step="0.01"
                   {...register("price")}
-                  className="rounded"
+                  className={cn(errors.price && "border-red-500")}
                 />
                 {errors.price && (
-                  <p className="text-xs text-red-500">{errors.price.message}</p>
+                  <p className="text-xs font-medium text-red-500">
+                    {errors.price.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Stock Quantity</label>
+                <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Stock Quantity
+                </label>
                 <Input
                   type="number"
                   {...register("stockQuantity")}
-                  className="rounded"
+                  className={cn(errors.stockQuantity && "border-red-500")}
                 />
                 {errors.stockQuantity && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs font-medium text-red-500">
                     {errors.stockQuantity.message}
                   </p>
                 )}
               </div>
               <div className="space-y-2">
-                <label className="text-sm font-medium">Min. Threshold</label>
+                <label className="text-sm font-medium text-blue-900 italic dark:text-blue-100">
+                  Alert Threshold
+                </label>
                 <Input
                   type="number"
                   {...register("minThreshold")}
-                  className="rounded"
+                  className={cn(errors.minThreshold && "border-red-500")}
                 />
                 {errors.minThreshold && (
-                  <p className="text-xs text-red-500">
+                  <p className="text-xs font-medium text-red-500">
                     {errors.minThreshold.message}
                   </p>
                 )}
               </div>
             </div>
-            <DialogFooter className="pt-4">
+            <DialogFooter className="pt-8">
               <Button
                 type="button"
                 variant="ghost"
                 onClick={handleCloseModal}
-                className="rounded"
+                className="font-medium text-blue-500"
               >
                 Cancel
               </Button>
               <Button
                 type="submit"
                 disabled={isCreating || isUpdating}
-                className="rounded bg-blue-600 px-8 font-bold hover:bg-blue-700"
+                className="px-8 font-semibold"
               >
-                {editingProduct ? "Update Product" : "Save Product"}
+                {editingProduct ? "Update product" : "Save product"}
               </Button>
             </DialogFooter>
           </form>
